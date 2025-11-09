@@ -1,0 +1,36 @@
+name: Matrix Build with Artifacts
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: matrix-cba944e
+      run: echo "Building for Node.js ${{ matrix.node-version }}"
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Generate build artifact
+      run: |
+        echo "Build output for Node.js ${{ matrix.node-version }}" > output.txt
+        echo "Build timestamp: $(date)" >> output.txt
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-cba944e-node${{ matrix.node-version }}
+        path: output.txt
